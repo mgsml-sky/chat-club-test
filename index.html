@@ -21,13 +21,14 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body, html {
-            width: 100vw; height: 100vh; overflow: hidden;
+            width: 100vw; height: 100vh; height: 100dvh; overflow: hidden;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-deep); color: var(--text-main);
+            position: fixed; inset: 0;
         }
 
         .chat-room-container {
-            display: flex; flex-direction: column; width: 100%; height: 100%;
+            display: flex; flex-direction: column; width: 100%; height: 100%; height: 100dvh;
             background: linear-gradient(135deg, #1f0819, #2b0b22, #11030e); position: relative; overflow: hidden;
         }
         
@@ -92,7 +93,7 @@
         .room-body-scrollable {
             flex: 1; width: 100%; overflow-y: auto; overflow-x: hidden;
             display: flex; flex-direction: column; align-items: center; gap: 8px;
-            padding: 8px; background: radial-gradient(circle at center, #350d2b, #1e0618, #120410);
+            padding: 8px 8px 20px 8px; background: radial-gradient(circle at center, #350d2b, #1e0618, #120410);
             scrollbar-width: none;
         }
         .room-body-scrollable::-webkit-scrollbar { display: none; }
@@ -235,17 +236,17 @@
         .comment-input { flex: 1; background: #2d0b23; border: 1px solid #f472b6; color: white; padding: 6px 10px; border-radius: 6px; font-size: 10px; font-weight: bold; outline: none; }
         .send-comment-btn { background: #ec4899; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: 900; }
 
-        /* Footer Bar - Fix for guaranteed bottom visibility */
+        /* Footer Bar - Fixed to ensure bottom visibility */
         .room-footer { 
             display: grid; 
             grid-template-columns: repeat(6, 1fr); 
             background: linear-gradient(90deg, #1f0819, #2b0b22); 
             border-top: 1px solid #f472b6; 
-            padding: 6px 4px; 
+            padding: 6px 4px calc(6px + env(safe-area-inset-bottom)) 4px; 
             gap: 4px; 
             flex-shrink: 0; 
             z-index: 100; 
-            height: 52px;
+            min-height: 54px;
             position: relative;
         }
         .footer-btn { background: rgba(45, 11, 35, 0.9); border: 1px solid #f472b6; color: #fbcfe8; padding: 4px 2px; text-align: center; border-radius: 6px; cursor: pointer; font-size: 7px; font-weight: 900; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
@@ -299,7 +300,6 @@
             position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; z-index: 2; opacity: 1; display: none; transform: none !important;
         }
         
-        /* PIP Camera - Fixed aspect ratio & object-fit to show clear face */
         .pip-camera-box {
             position: absolute; bottom: 45px; right: 10px; width: 75px; height: 75px; border-radius: 50%;
             border: 2px solid #ec4899; overflow: hidden; background: #120410; z-index: 55; display: none;
@@ -335,7 +335,7 @@
             box-shadow: 0 0 10px rgba(236,72,153,0.9); pointer-events: auto;
         }
 
-        /* Full 300px High Video Board Box Styling with Three-Dot Menu */
+        /* Full 300px High Video Board Box Styling */
         .saved-video-card-board {
             width: 100%; height: 300px; background: #000; border: 2px solid #ec4899;
             border-radius: 12px; position: relative; overflow: hidden; display: flex;
@@ -427,22 +427,17 @@
                 <!-- 2. Immersive Star-like Full-Screen Video Karaoke Studio Overlay -->
                 <div class="mode-view-overlay" id="singingModeView" style="padding: 0; background: #000;">
                     <div class="karaoke-full-studio">
-                        <!-- Watermark Tag -->
                         <div class="mgsml-watermark-tag">⭐ MGSML SKY CLUB</div>
 
-                        <!-- Circular PIP Camera Box (Fixed Visibility & Bottom Right Position) -->
                         <div class="pip-camera-box" id="pipCameraContainer">
                             <video id="pipCameraVideo" autoplay playsinline muted></video>
                         </div>
 
-                        <!-- Dedicated Background Video Element -->
                         <video id="karaokeBgVideo" autoplay playsinline loop class="karaoke-bg-video-elem" ontimelineupdate="updateVideoSeekProgress()"></video>
                         
-                        <!-- Toggle Arrow Settings Button -->
                         <div class="floating-karaoke-restore-btn" id="restoreKaraokeControlsBtn" onclick="toggleKaraokeStudioDrawer()" title="Toggle Studio Controls">▼</div>
 
                         <div class="karaoke-overlay-content">
-                            <!-- Top Control Panel -->
                             <div class="karaoke-interactive-box" id="karaokeInteractivePanel">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <span style="color: #fde047; font-size: 9px; font-weight: 900;">🎤 MGSML VOICE STUDIO & KARAOKE</span>
@@ -453,7 +448,6 @@
                                     <input type="text" id="karaokeSearchInput" class="form-input" placeholder="Search beat..." style="flex:1; padding:3px;">
                                     <button class="v-btn" style="background:#f59e0b; padding:3px 5px;" onclick="searchKaraokeTrack()">Search</button>
                                     
-                                    <!-- Unified Upload Media Button for MP3/MP4 -->
                                     <button class="v-btn" style="background:#10b981; padding:3px 5px;" onclick="document.getElementById('localMediaUpload').click()">Upload MP3/MP4</button>
                                     <input type="file" id="localMediaUpload" accept="audio/mp3,audio/*,video/mp4,video/webm" style="display:none;" onchange="handleUnifiedMediaUpload(event)">
                                 </div>
@@ -469,11 +463,9 @@
                                 </div>
                             </div>
 
-                            <!-- Hidden Audio Player -->
                             <audio id="karaokeAudioPlayer" preload="auto" ontimeupdate="updateAudioSeekProgress()"></audio>
 
                             <div>
-                                <!-- Slim Seek Bar -->
                                 <div class="karaoke-interactive-box" style="padding: 2px 4px; margin-bottom: 2px;">
                                     <div style="display:flex; justify-content:space-between; font-size:6px; color:#fbcfe8;">
                                         <span id="currentTimeLabel">00:00</span>
@@ -483,13 +475,11 @@
                                     <input type="range" id="trackSeekSlider" min="0" max="100" value="0" style="width:100%; height:4px; cursor:pointer; accent-color:#ec4899;" oninput="seekKaraokeTrack(this.value)">
                                 </div>
 
-                                <!-- Synchronized Lyrics Screen -->
                                 <div class="karaoke-lyrics-screen" id="lyricsTickerDisplay">
                                     🎶 Select MP3 / MP4 Track & Sing Along! MGSML Sky Club Active.
                                 </div>
                             </div>
 
-                            <!-- Elevated Bottom Action Bar -->
                             <div class="karaoke-interactive-box" style="padding: 4px;">
                                 <div style="display: flex; gap: 4px;">
                                     <button class="v-btn" style="flex:1; background:#10b981; padding:4px; font-size:7px;" onclick="startKaraokePerformance()">▶ Play Full</button>
@@ -515,7 +505,6 @@
 
                 <video id="clubLiveVideo" autoplay playsinline muted></video>
 
-                <!-- Stream Comments & Joining Notification Overlay -->
                 <div class="stream-comments-overlay" id="streamCommentsOverlay"></div>
 
                 <div class="video-controls-bar">
@@ -577,7 +566,7 @@
             <button class="send-comment-btn" onclick="sendComment()">Send</button>
         </div>
 
-        <!-- Footer Control Bar -->
+        <!-- Footer Control Bar (Fixed Visibility) -->
         <div class="room-footer">
             <button class="footer-btn" onclick="toggleBottomMic()" id="footerMicBtn">
                 <span class="material-icons" style="font-size: 13px; color: #10b981;" id="footerMicIcon">mic</span>
@@ -617,7 +606,6 @@
         </div>
 
         <div class="profile-content">
-            <!-- User Card -->
             <div class="profile-card-main">
                 <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=GourangaMondal" class="profile-large-avatar" id="profileAvatarImg" alt="Avatar">
                 <div style="flex:1;">
@@ -628,7 +616,6 @@
                 </div>
             </div>
 
-            <!-- Dynamic MGSML Crypto Mining Engine -->
             <div class="mining-live-card">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <span style="font-size:10px; font-weight:900; color:var(--neon-rose);">⚡ MGSML Crypto Mining Engine</span>
@@ -646,7 +633,6 @@
                 </div>
             </div>
 
-            <!-- Dual Wallet Hub -->
             <div class="dual-wallet-box">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <span style="font-size:10px; font-weight:900; color:#f59e0b;">🌐 Dual Wallet Hub</span>
@@ -681,7 +667,6 @@
                 </div>
             </div>
 
-            <!-- Enhanced Advanced Instant Swap Engine -->
             <div class="mining-live-card" style="background:#2d0b23; border-color:#f472b6;">
                 <span style="font-size:10px; font-weight:900; color:#fbcfe8;">🔄 Advanced Instant Swap Engine</span>
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 4px;">
@@ -715,7 +700,6 @@
                 <button class="submit-btn" style="background:linear-gradient(45deg, #ec4899, #f43f5e);" onclick="executeAdvancedTokenSwap()">Execute Instant Swap</button>
             </div>
 
-            <!-- Security M-PIN -->
             <div class="mining-live-card" style="background:#2d0b23; border-color:#4a153d;">
                 <span style="font-size:10px; font-weight:900; color:#f59e0b;">🛡️ Security & Secret M-PIN Setup</span>
                 <div class="form-group">
@@ -725,7 +709,6 @@
                 <button class="submit-btn" style="background:#120410; border:1px solid #ec4899; color:#fbcfe8;" onclick="saveMPINSecurity()">Save M-PIN Security</button>
             </div>
 
-            <!-- SAVED KARAOKE SONGS - PERSISTENT LOCALSTORAGE & 300px VIDEO BOARDS WITH THREE-DOT MENU -->
             <div class="mining-live-card" style="background:#2d0b23; border-color:#ec4899; margin-bottom: 20px;">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <span style="font-size:10px; font-weight:900; color:#fbcfe8;">🎬 My Saved Video Karaoke Performances</span>
@@ -852,14 +835,12 @@
             Hammer: 2500
         };
 
-        // Persistent LocalStorage Load for Saved Songs
         let userSavedSongs = JSON.parse(localStorage.getItem('mgsml_saved_songs')) || [];
 
         let isVideoKaraokeLoaded = false;
         let activeBlobUrl = "";
         let isStudioDrawerOpen = true;
 
-        // Web Audio & MediaRecorder Mixing Variables
         let mediaRecorder = null;
         let recordedChunks = [];
         let currentRecordedBlobUrl = null;
@@ -923,13 +904,10 @@
             tradingView.style.display = 'none';
 
             if(mode === 'Cricket') cricketView.style.display = 'flex';
-            else if(mode === 'Singing') {
-                singingView.style.display = 'flex';
-            }
+            else if(mode === 'Singing') singingView.style.display = 'flex';
             else if(mode === 'Trading') tradingView.style.display = 'flex';
         }
 
-        /* PIP Camera Fixed Visibility */
         let pipStreamRef = null;
         async function togglePipCameraDP() {
             const pipBox = document.getElementById('pipCameraContainer');
@@ -978,6 +956,10 @@
                 banner.style.display = 'flex'; 
                 btn.innerText = "Cam";
             }
+        }
+
+        function toggleScreenShare() {
+            alert("🖥️ Screen Sharing feature activated!");
         }
 
         function toggleFullScreenZoom() {
@@ -1038,7 +1020,6 @@
             }
         }
 
-        /* Web Audio API Digital Mixer & Synchronized Recording Start */
         async function startKaraokePerformance() {
             const bgVideo = document.getElementById('karaokeBgVideo');
             const audioPlayer = document.getElementById('karaokeAudioPlayer');
@@ -1052,25 +1033,20 @@
             try {
                 backgroundAudioElem.play().catch(e => console.log(e));
 
-                // Get Camera & Mic stream
                 const userStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
                 
-                // Web Audio API to mix background music & mic audio together
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 const dest = audioCtx.createMediaStreamDestination();
 
-                // Connect Mic
                 const micSource = audioCtx.createMediaStreamSource(userStream);
                 micSource.connect(dest);
 
-                // Connect Background Music if possible
                 try {
                     const musicSource = audioCtx.createMediaElementSource(backgroundAudioElem);
-                    musicSource.connect(audioCtx.destination); // Play on speaker
-                    musicSource.connect(dest); // Mix into recording destination
+                    musicSource.connect(audioCtx.destination);
+                    musicSource.connect(dest);
                 } catch(err) { console.log("Audio Element Source already connected", err); }
 
-                // Combine video tracks from user stream and mixed audio tracks
                 const combinedStream = new MediaStream([
                     ...userStream.getVideoTracks(),
                     ...dest.stream.getAudioTracks()
@@ -1186,14 +1162,12 @@
                 mediaUrl: finalSavedUrl 
             });
 
-            // Save persistently to LocalStorage so clearing app won't delete data
             localStorage.setItem('mgsml_saved_songs', JSON.stringify(userSavedSongs));
 
             alert(`💾 Saved permanently to Profile with MGSML Watermark & Music Mix!`);
             openProfilePage();
         }
 
-        /* RENDER SAVED SONGS WITH PERSISTENT 300px VIDEO BOARDS & THREE-DOT MENU */
         function renderSavedSongsList() {
             const container = document.getElementById('userSavedSongsListContainer');
             document.getElementById('savedSongCountBadge').innerText = `${userSavedSongs.length} Saved`;
@@ -1243,7 +1217,6 @@
             document.querySelectorAll('.saved-action-dropdown').forEach(m => m.style.display = 'none');
         });
 
-        /* Direct Download Handler */
         function downloadSongFileDirectly(index) {
             const song = userSavedSongs[index];
             const link = document.createElement('a');
@@ -1255,7 +1228,6 @@
             alert(`📥 Direct Download Initiated for: ${song.title}`);
         }
 
-        /* Direct Share to Social / Facebook API */
         async function shareSongToSocial(index) {
             const song = userSavedSongs[index];
             if (navigator.share) {
